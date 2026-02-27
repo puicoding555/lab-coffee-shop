@@ -1,16 +1,19 @@
 import Api from './Api'
 
 export default {
-  index () {
+  show(coffeeId) {
+    return Api().get(`coffee/${coffeeId}`)
+  },
+  index() {
     return Api().get('coffees')
   },
-  create (data) {
+  create(data) {
     return Api().post('coffee', data)
   },
-  update (id, data) {
+  update(id, data) {
     return Api().put(`coffee/${id}`, data)
   },
-  delete (id) {
+  delete(id) {
     return Api().delete(`coffee/${id}`)
   }
 }

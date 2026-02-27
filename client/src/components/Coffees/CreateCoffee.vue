@@ -13,6 +13,29 @@
   </div>
 </template>
 
+<script>
+import CoffeesService from '../../services/CoffeesService'
+
+export default {
+  data () {
+    return {
+      coffee: {
+        name: '',
+        price: '',
+        type: '',
+        description: ''
+      }
+    }
+  },
+  methods: {
+    async createCoffee () {
+      await CoffeesService.create(this.coffee)
+      this.$router.push({ name: 'coffees' })
+    }
+  }
+}
+</script>
+
 <style scoped>
 .container {
   min-height: 100vh;
@@ -45,26 +68,3 @@ button {
   cursor: pointer;
 }
 </style>
-
-<script>
-import CoffeesService from '../../services/CoffeesService'
-
-export default {
-  data () {
-    return {
-      coffee: {
-        name: '',
-        price: '',
-        type: '',
-        description: ''
-      }
-    }
-  },
-  methods: {
-    async createCoffee () {
-      await CoffeesService.post(this.coffee)
-      this.$router.push({ name: 'coffees' })
-    }
-  }
-}
-</script>

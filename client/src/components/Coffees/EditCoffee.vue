@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+  <div class="container">
     <h1>Edit Coffee</h1>
 
     <form v-if="coffee" @submit.prevent="updateCoffee">
@@ -13,12 +13,34 @@
   </div>
 </template>
 
+<script>
+import CoffeesService from '../../services/CoffeesService'
+
+export default {
+  data() {
+    return {
+      coffee: null
+    }
+  },
+  async created() {
+    const coffeeId = this.$route.params.coffeeId
+    this.coffee = (await CoffeesService.show(coffeeId)).data
+  },
+  methods: {
+    async updateCoffee() {
+      await CoffeesService.put(this.coffee)
+      this.$router.push({ name: 'coffees' })
+    }
+  }
+}
+</script>
+
 <style scoped>
 .container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;      /* กลางแนวนอน */
+  align-items: center;
   padding-top: 40px;
 }
 
@@ -42,25 +64,3 @@ button {
   cursor: pointer;
 }
 </style>
-
-<script>
-import CoffeesService from '../../services/CoffeesService'
-
-export default {
-  data () {
-    return {
-      coffee: null
-    }
-  },
-  async created () {
-    const coffeeId = this.$route.params.coffeeId
-    this.coffee = (await CoffeesService.show(coffeeId)).data
-  },
-  methods: {
-    async updateCoffee () {
-      await CoffeesService.put(this.coffee)
-      this.$router.push({ name: 'coffees' })
-    }
-  }
-}
-</script>

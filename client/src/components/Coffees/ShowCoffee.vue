@@ -8,9 +8,7 @@
     <p><b>Type:</b> {{ coffee.type }}</p>
     <p><b>Description:</b> {{ coffee.description }}</p>
 
-    <button @click="$router.push({ name: 'coffees' })">
-      Back
-    </button>
+    <button @click="$router.push({ name: 'coffees' })">Back</button>
   </div>
 </template>
 
@@ -27,7 +25,8 @@ export default {
   async mounted () {
     const coffeeId = this.$route.params.coffeeId
     this.coffee = (await CoffeesService.show(coffeeId)).data
-  }
+  },
+  
 }
 </script>
 

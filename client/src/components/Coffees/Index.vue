@@ -10,22 +10,79 @@
       <p>price: {{ coffee.price }}</p>
       <p>type: {{ coffee.type }}</p>
 
-    <div class="btn-group">
+      <div class="btn-group">
         <button @click="goShow(coffee.id)">ดูข้อมูล</button>
-        <button v-if="auth.token">Edit</button>
-        <button v-if="auth.token">Delete</button>
-    </div>
+        <button v-if="auth.token" @click="goEdit(coffee.id)">Edit</button>
+        <button v-if="auth.token" @click="deleteCoffee(coffee.id)">Delete</button>
+      </div>
 
     </div>
   </div>
 </template>
+
+<script>
+import CoffeesService from '../../services/CoffeesService'
+import { useAuthStore } from '../../stores/auth'
+
+export default {
+  name: 'CoffeeIndex',
+
+  data() {
+    return {
+      coffees: []
+    }
+  },
+
+  computed: {
+    auth() {
+      return useAuthStore()   // ✅ เรียกใน component context
+    }
+  },
+
+  async mounted() {
+    await this.refreshData()
+  },
+
+  methods: {
+    async refreshData() {
+      this.coffees = (await CoffeesService.index()).data
+    },
+
+    goCreate() {
+      this.$router.push({ name: 'coffee-create' })
+    },
+
+    goEdit(coffeeId) {
+      this.$router.push({
+        name: 'coffee-edit',
+        params: { coffeeId }
+      })
+    },
+
+    goShow(coffeeId) {
+      this.$router.push({
+        name: 'coffee-show',
+        params: { coffeeId }
+      })
+    },
+
+    async deleteCoffee(coffee) {
+      if (confirm('Delete this coffee?')) {
+        await CoffeesService.delete(coffee)
+        this.refreshData()
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 .container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;   /* กลางแนวนอน */
+  align-items: center;
+  /* กลางแนวนอน */
   padding-top: 40px;
 }
 
@@ -47,59 +104,3 @@ button {
   cursor: pointer;
 }
 </style>
-
-<script>
-import CoffeesService from '../../services/CoffeesService'
-import { useAuthStore } from '../../stores/auth'
-
-export default {
-  name: 'CoffeeIndex',
-
-  data () {
-    return {
-      coffees: []
-    }
-  },
-
-  computed: {
-    auth () {
-      return useAuthStore()   // ✅ เรียกใน component context
-    }
-  },
-
-  async mounted () {
-    await this.refreshData()
-  },
-
-  methods: {
-    async refreshData () {
-      this.coffees = (await CoffeesService.index()).data
-    },
-
-    goCreate () {
-      this.$router.push({ name: 'coffee-create' })
-    },
-
-    goEdit (coffeeId) {
-      this.$router.push({
-        name: 'coffee-edit',
-        params: { coffeeId }
-      })
-    },
-
-    goShow (coffeeId) {
-      this.$router.push({
-        name: 'coffee-show',
-        params: { coffeeId }
-      })
-    },
-
-    async deleteCoffee (coffee) {
-      if (confirm('Delete this coffee?')) {
-        await CoffeesService.delete(coffee)
-        this.refreshData()
-      }
-    }
-  }
-}
-</script>
