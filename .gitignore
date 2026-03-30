@@ -1,0 +1,9 @@
+node_modules/
+menus/node_modules/
+menus/dist/
+server/node_modules/
+Screenshots/
+server/public/uploads/
+*.sqlite
+*.db
+.vscode/
